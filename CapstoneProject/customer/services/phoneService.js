@@ -4,7 +4,7 @@ export class Service {
   getPhones = async () => {
     try {
       const res = await axios({
-        url: "${{baseUrl}/Products",
+        url: "${{baseUrl}/CapstoneJS",
         method: "GET",
       });
       return res.data;
@@ -15,7 +15,7 @@ export class Service {
   getPhoneById = async (id) => {
     try {
       const res = await axios({
-        url: `${baseUrl}/Products/${id}`,
+        url: `${baseUrl}/CapstoneJS/${id}`,
         method: "GET",
       });
 
