@@ -3,10 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Trang Admin</title>
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     <link rel="stylesheet" href="../../src/output.css" />
+    <!-- font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>Trang quản lý sản phẩm</title>
   </head>
   <body>
+    <div class="py-2 px-4 bg-blue-500 text-red-500"><a  href="../../home.html">Home</a></div>
     <div class="container">
       <!-- phần đầu -->
       <header class="text-4xl my-4 text-blue-600 flex items-center">
@@ -23,18 +27,18 @@
               <div class="md:col-span-1">
                 <!-- Button thêm mới -->
                 <div class="mb-4">
-                  <!-- Sử dụng checkbox để hiển thị modal -->
-                  <label
-                    for="modal-toggle"
-                    class="w-full px-4 py-2 rounded-lg text-white bg-gradient-to-r from-blue-500 via-blue-400 to-purple-500 hover:from-blue-600 hover:to-purple-600 flex items-center justify-center cursor-pointer"
+                  <button
+                    id="openModal"
+                    data-toggle="modal"
+                    data-target="#exampleModal"
+                    class="w-full px-4 py-2 rounded-lg text-white bg-gradient-to-r from-blue-500 via-blue-400 to-purple-500 hover:from-blue-600 hover:to-purple-600 flex items-center justify-center"
                   >
                     <i class="fa fa-plus mr-2"></i>
                     Thêm Sản Phẩm
-                  </label>
-                  <input type="checkbox" id="modal-toggle" class="hidden" />
+                  </button>
                 </div>
               </div>
-
+      
               <!-- Cột tìm kiếm sản phẩm -->
               <div class="md:col-span-3">
                 <div
@@ -56,7 +60,7 @@
           </div>
         </div>
       </main>
-
+      
       <!-- phần đuôi -->
       <footer>
         <div id="tblSanPham">
@@ -82,109 +86,145 @@
           </table>
         </div>
       </footer>
-
+      
       <!-- Modal -->
       <div
-        class="fixed inset-0 z-10 flex items-center justify-center bg-gray-800 bg-opacity-50"
+        class="fixed inset-0 z-10 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden"
         id="exampleModal"
       >
         <div class="bg-white rounded-lg shadow-xl w-full max-w-lg">
-          <div class="flex items-center justify-between px-4 py-3 border-b">
-            <h4 class="text-lg font-semibold">Thêm Sản Phẩm</h4>
-            <label
-              for="modal-toggle"
-              class="text-gray-500 hover:text-gray-700 cursor-pointer"
-            >
-              ✕
-            </label>
-          </div>
-          <div class="p-4">
-            <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700"
-                >Tên Sản Phẩm</label
+          <form novalidate role="form" id="formSP">
+            <div class="flex items-center justify-between px-4 py-3 border-b">
+              <h4 class="text-lg font-semibold">Thêm Sản Phẩm</h4>
+              <button
+                id="closeModal"
+                class="text-gray-500 hover:text-gray-700 cursor-pointer"
               >
-              <input
-                id="TenSP"
-                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Nhập vào tên sản phẩm"
-              />
+                ✕
+              </button>
             </div>
-            <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700"
-                >Giá Sản Phẩm</label
-              >
-              <input
-                id="GiaSP"
-                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Nhập vào giá sản phẩm"
-              />
+            <div class="p-4">
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Tên Sản Phẩm</label
+                >
+                <input
+                  id="tenSP"
+                  class="block w-full h-20 text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Nhập vào tên sản phẩm"
+                />
+                <div id="invalidtensp" class="text-red-500 text-sm mt-1"></div>
+              </div>
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Giá Sản Phẩm</label
+                >
+                <input
+                  id="giaSP"
+                  class="block w-full h-20 text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Nhập vào giá sản phẩm"
+                />
+              </div>
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Kích Thước Màn Hình</label
+                >
+                <input
+                  id="screenSP"
+                  class="block w-full h-20 text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Nhập vào kích thước màn hình (đơn vị in)"
+                />
+              </div>
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Thông Số Camera Sau</label
+                >
+                <input
+                  id="backcameraSP"
+                  class="block w-full h-20 text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Nhập vào thông số camera sau"
+                />
+              </div>
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Thông Số Camera Trước</label
+                >
+                <input
+                  id="frontcameraSP"
+                  class="block w-full h-20 text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Nhập vào thông số camera trước"
+                />
+              </div>
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Hình Ảnh</label
+                >
+                <input
+                  id="imgSP"
+                  class="block w-full h-20 text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Nhập vào hình ảnh sản phẩm"
+                />
+              </div>
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Mô Tả Sản Phẩm</label
+                >
+                <input
+                  id="descSP"
+                  class="block w-full h-20 text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Nhập vào mô tả sản phẩm"
+                />
+              </div>
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Type</label>
+                <select
+                  id="typeSP"
+                  class="block w-full h-20 text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option value="0">Vui lòng chọn type</option>
+                  <option value="Samsung">Samsung</option>
+                  <option value="Iphone">Iphone</option>
+                </select>
+              </div>
+              <!-- modal footer -->
+              <div class="" id="modal-footer">
+
+                <button id="btnthemSP" form="formSP" class="bg-green-500 px-7 py-2">Thêm</button>
+                <!-- <button form="formSP" id="btnDong"  class="bg-yellow-500 px-7 py-2">close</button> -->
+              </div>
+              
             </div>
-            <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700"
-                >Kích Thước Màn Hình</label
-              >
-              <input
-                id="ManHinhSP"
-                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Nhập vào kích thước màn hình (đơn vị in)"
-              />
-            </div>
-            <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700"
-                >Thông Số Camera Sau</label
-              >
-              <input
-                id="CamSauSP"
-                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Nhập vào thông số camera sau"
-              />
-            </div>
-            <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700"
-                >Thông Số Camera Trước</label
-              >
-              <input
-                id="CamTruocSP"
-                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Nhập vào thông số camera trước"
-              />
-            </div>
-            <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700"
-                >Hình Ảnh</label
-              >
-              <input
-                id="HinhAnhSP"
-                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Nhập vào hình ảnh sản phẩm"
-              />
-            </div>
-            <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700"
-                >Mô Tả Sản Phẩm</label
-              >
-              <input
-                id="MoTaSP"
-                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Nhập vào mô tả sản phẩm"
-              />
-            </div>
-            <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700"
-                >Type</label
-              >
-              <select
-                id="TypeSP"
-                class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-              >
-                <option value="0">Vui lòng chọn type</option>
-                <option value="Samsung">Samsung</option>
-                <option value="Iphone">Iphone</option>
-              </select>
-            </div>
-          </div>
+          </form>
         </div>
       </div>
-    </div>
-  </body>
+      
+
+<script>
+    // Lấy các phần tử DOM cần thiết
+  const openModalButton = document.getElementById('openModal');
+  const closeModalButton = document.getElementById('closeModal');
+  const modal = document.getElementById('exampleModal');
+
+// Sự kiện khi nhấn nút "Thêm Sản Phẩm" để mở modal
+  openModalButton.addEventListener('click', () => {
+    modal.classList.remove('hidden'); // Hiển thị modal
+  });
+
+  // Sự kiện khi nhấn nút "✕" để đóng modal
+  closeModalButton.addEventListener('click', (event) => {
+    event.preventDefault(); // Ngăn chặn hành vi mặc định
+    modal.classList.add('hidden'); // Ẩn modal
+  });
+
+  // Tùy chọn: Đóng modal khi click ra ngoài vùng modal
+  window.addEventListener('click', (event) => {
+    if (event.target === modal) {
+      modal.classList.add('hidden'); // Ẩn modal
+    }
+  });
+
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
+  <script type="module" src="../controller/admin.js"></script>
+</body>
 </html>
