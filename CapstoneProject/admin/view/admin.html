@@ -3,15 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
-    <link rel="stylesheet" href="../../src/output.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- <link rel="stylesheet" href="../../src/output.css" /> -->
     <!-- font awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <title>Trang quản lý sản phẩm</title>
   </head>
   <body>
-    <div class="py-2 px-4 bg-blue-500 text-red-500"><a  href="../../home.html">Home</a></div>
-    <div class="container">
+    <div class="navbar bg-gray-800 text-white flex items-center justify-between p-4">
+      <a href="#" class="logo text-2xl font-bold">Admin Panel</a>
+      <div class="menu flex space-x-4">
+        <a href="../../home.html" class="hover:bg-gray-700 p-2 rounded">Home</a>
+        <a href="#products" class="hover:bg-gray-700 p-2 rounded">Products</a>
+        <a href="#orders" class="hover:bg-gray-700 p-2 rounded">Orders</a>
+        <a href="#users" class="hover:bg-gray-700 p-2 rounded">Users</a>
+        <a href="#settings" class="hover:bg-gray-700 p-2 rounded">Settings</a>
+      </div>
+      <div class="user flex space-x-4">
+        <a href="#profile" class="hover:bg-gray-700 p-2 rounded">Profile</a>
+        <a href="#logout" class="hover:bg-gray-700 p-2 rounded">Logout</a>
+      </div>
+    </div>
+    <div class="container  mx-auto max-w-screen-lg">
       <!-- phần đầu -->
       <header class="text-4xl my-4 text-blue-600 flex items-center">
         Quản lý thông tin sản phẩm
@@ -36,6 +49,13 @@
                     <i class="fa fa-plus mr-2"></i>
                     Thêm Sản Phẩm
                   </button>
+                </div>
+                <div class="">
+                  <select id="locGiaSP" onchange="locGiaSP()" class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" >
+                    <option value="locSP">Lọc giá (toàn bộ)</option>
+                    <option value="nhoDenLon">Nhỏ đến lớn</option>
+                    <option value="lonDenNho">Lớn đến nhỏ</option>
+                  </select>
                 </div>
               </div>
       
@@ -110,30 +130,33 @@
                 >
                 <input
                   id="tenSP"
-                  class="block w-full h-20 text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  class="block w-full  text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="Nhập vào tên sản phẩm"
                 />
-                <div id="invalidtensp" class="text-red-500 text-sm mt-1"></div>
+                <div id="invalidtenSP" class="text-red-500"></div>
               </div>
+              <div id="invalidtensp" class="text-red-500 text-sm mt-1"></div>
               <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700"
                   >Giá Sản Phẩm</label
                 >
                 <input
                   id="giaSP"
-                  class="block w-full h-20 text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  class="block w-full  text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="Nhập vào giá sản phẩm"
                 />
+                <div id="invalidgiaSP" class="text-red-500 text-sm mt-1"></div>
               </div>
               <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700"
-                  >Kích Thước Màn Hình</label
+                  >Kích Thước Màn Hình</label 
                 >
                 <input
                   id="screenSP"
-                  class="block w-full h-20 text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  class="block w-full  text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="Nhập vào kích thước màn hình (đơn vị in)"
                 />
+                <div id="invalidscreenSP" class="text-red-500 text-sm mt-1"></div>
               </div>
               <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700"
@@ -141,9 +164,10 @@
                 >
                 <input
                   id="backcameraSP"
-                  class="block w-full h-20 text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  class="block w-full  text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="Nhập vào thông số camera sau"
                 />
+                <div id="invalidbackcameraSP" class="text-red-500 text-sm mt-1"></div>
               </div>
               <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700"
@@ -151,9 +175,10 @@
                 >
                 <input
                   id="frontcameraSP"
-                  class="block w-full h-20 text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  class="block w-full  text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="Nhập vào thông số camera trước"
                 />
+                <div id="invalidfrontcameraSP" class="text-red-500 text-sm mt-1"></div>
               </div>
               <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700"
@@ -161,9 +186,10 @@
                 >
                 <input
                   id="imgSP"
-                  class="block w-full h-20 text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  class="block w-full  text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="Nhập vào hình ảnh sản phẩm"
                 />
+                <div id="invalidimgSP" class="text-red-500 text-sm mt-1"></div>
               </div>
               <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700"
@@ -171,30 +197,34 @@
                 >
                 <input
                   id="descSP"
-                  class="block w-full h-20 text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  class="block w-full  text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder="Nhập vào mô tả sản phẩm"
                 />
+                <div id="invaliddescSP" class="text-red-500 text-sm mt-1"></div>
               </div>
               <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Type</label>
                 <select
                   id="typeSP"
-                  class="block w-full h-20 text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  class="block w-full  text-lg mt-1 px-4 py-2 border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 >
                   <option value="0">Vui lòng chọn type</option>
                   <option value="Samsung">Samsung</option>
                   <option value="Iphone">Iphone</option>
                 </select>
+                <div id="invalidtypeSP" class="text-red-500 text-sm mt-1"></div>
               </div>
               <!-- modal footer -->
-              <div class="" id="modal-footer">
-
-                <button id="btnthemSP" form="formSP" class="bg-green-500 px-7 py-2">Thêm</button>
-                <!-- <button form="formSP" id="btnDong"  class="bg-yellow-500 px-7 py-2">close</button> -->
-              </div>
+              
               
             </div>
           </form>
+          <!-- modal footer -->
+          <div class="modal-footer flex justify-end" id="modal-footer">
+            <button id="btnthemSP" form="formSP" class="bg-green-500 px-7 py-2 rounded rounded-lg gap-5">Thêm</button>
+            <button id="btnCapNhatSP" type="submit" class="bg-blue-500 px-7 py-2 rounded rounded-lg gap-5">Cập Nhật</button>
+            <button  id="btnDong" class="bg-yellow-500 px-7 py-2">Đóng</button>
+          </div>
         </div>
       </div>
       

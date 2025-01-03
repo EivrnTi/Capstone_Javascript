@@ -1,12 +1,24 @@
-import { adminservices } from "../services/adminservices.js";
-import { api } from "../model/api.js";
+import { adminservices } from "../model/adminservices.js";
+import { api } from "../services/api.js";
+import { Validation } from "../model/validation.js";
 
+const validation = new Validation();
+
+// const tenSP = document.getElementById("tenSP");
+// console.log("tenSP: ", tenSP.value);
+
+// const isTenSPValid = validation.required(tenSP.value, "idError");
+// console.log("isTenSPValid: ", isTenSPValid);
+
+let isEditMode = false;
+let editingProductId = null;
+
+// Hàm render bảng sản phẩm
 const renderTable = (arr) => {
-  // xuất ra bảng ngoài UI
-  let htmlContent = "";
-  arr.forEach((item, index) => {
-    htmlContent += `
-      <tr>
+  const htmlContent = arr
+    .map(
+      (item, index) => `
+    <tr>
       <td>${index + 1}</td>
       <td>${item.tenSP}</td>
       <td>${item.giaSP}</td>
@@ -17,53 +29,40 @@ const renderTable = (arr) => {
       <td>${item.descSP}</td>
       <td>${item.typeSP}</td>
       <td>
-                    <button
-                        class=" btn px-4 py-2 bg-green-500"
-                        onclick="editProduct('${item.id}')"
-                    >
-                        Edit
-                    </button>
-                    <button 
-                    class="btndelete px-4 py-2 bg-green-500"
-                    onclick="deleteProduct('${item.id}')"
-                      >Delete 
-                      </button>
-                </td>
-      
-      </tr>
-    `;
-  });
+        <button class="btn px-4 py-2 bg-green-500 rounded-xl" onclick="editProduct('${
+          item.id
+        }')">Edit</button>
+        <button class="btndelete px-4 py-2 bg-red-500 rounded-xl" onclick="deleteProduct('${
+          item.id
+        }')">Delete</button>
+      </td>
+    </tr>
+  `
+    )
+    .join("");
+
   document.getElementById("tblDanhSachSP").innerHTML = htmlContent;
 };
 
+// Hàm lấy danh sách sản phẩm từ API
 const getProducts = async () => {
-  // lay du lieu tu api
   try {
-    const kq = await api.getProductList();
-
-    console.log("kq: ", kq.data);
-    renderTable(kq.data);
+    const response = await api.getProductList();
+    renderTable(response.data);
   } catch (error) {
-    console.log("error: ", error);
+    alert("Không thể lấy danh sách sản phẩm. Vui lòng thử lại sau.");
+    console.error("Error fetching products: ", error);
   }
 };
-getProducts();
 
+// Hàm lấy thông tin sản phẩm từ form
 const layThongTinSanPham = () => {
-  //lấy thông tin sản phẩm
-  const elements = Array.from(
-    document.querySelectorAll("#formSP input,#formSP select")
-  );
-
-  let sp = {}; // Khởi tạo đối tượng rỗng
+  const elements = document.querySelectorAll("#formSP input, #formSP select");
+  const sp = {};
 
   elements.forEach((ele) => {
-    sp[ele.id] = ele.value; // Gán key là ele.id và value là ele.value
+    sp[ele.id] = ele.value;
   });
-  // let sp = elements.reduce((acc, ele) => {
-  //   acc[ele.id] = ele.value;
-  //   return acc;
-  // }, {});
 
   return new adminservices(
     sp.tenSP,
@@ -77,49 +76,157 @@ const layThongTinSanPham = () => {
   );
 };
 
-document.getElementById("formSP").onsubmit = async (ev) => {
-  //xử lý sự kiện khi click vào  button form
-  ev.preventDefault();
-  //xuất thông tin sản phẩm ra cửa sổ consolog
-  const sp = layThongTinSanPham();
-  console.log("sp: ", sp);
-  await api.addProduct(sp);
-
-  getProducts();
+// Hàm xử lý sự kiện khi mở modal
+document.getElementById("openModal").onclick = () => {
+  const form = document.getElementById("formSP");
+  form.reset();
+  isEditMode = false;
+  document.getElementById("btnCapNhatSP").style.display = "none";
+  document.getElementById("btnthemSP").style.display = "inline-block";
+  document.getElementById("tenSP").disabled = false;
 };
 
-window.editProduct = async (productId) => {
-  //chỉnh sửa sản phẩm
-  console.log("productId: ", productId);
+// Hàm xử lý sự kiện submit form
+document.getElementById("formSP").onsubmit = async (ev) => {
+  ev.preventDefault();
 
+  const sp = layThongTinSanPham();
+
+  let isValid = true;
+  //kiểm tra có nhập không
+  //value và errorID bên valid và div  trong html
+  // tài khoản phải nhập trên < 8 và > 20 kí tự , có thể bao gồm số
+  isValid &= validation.checkTenSP(sp.tenSP, "invalidtenSP");
+  isValid &= validation.checkGia(sp.giaSP, "invalidgiaSP");
+  isValid &= validation.checkScreen(sp.screenSP, "invalidscreenSP");
+  isValid &= validation.checkBackCamera(sp.backcameraSP, "invalidbackcameraSP");
+  isValid &= validation.checkFrontCamera(
+    sp.frontcameraSP,
+    "invalidfrontcameraSP"
+  );
+  isValid &= validation.checkImage(sp.imgSP, "invalidimgSP");
+  isValid &= validation.checkDesc(sp.descSP, "invaliddescSP");
+  isValid &= validation.checkType(sp.typeSP, "invalidtypeSP");
+  if (!isValid) return;
   try {
-    // tạo biến điệm khi gọi api sang
+    if (isEditMode) {
+      console.log("editingProductId", editingProductId);
+      await api.editProduct(editingProductId, sp);
+    } else {
+      await api.addProduct(sp);
+    }
+    getProducts();
+    document.getElementById("exampleModal").classList.add("hidden");
+  } catch (error) {
+    alert("Có lỗi xảy ra. Vui lòng thử lại.");
+    console.error("Error saving product: ", error);
+  }
+};
+
+// Hàm chỉnh sửa sản phẩm
+window.editProduct = async (productId) => {
+  try {
     const result = await api.getProductById(productId);
-    console.log("result: ", result.data);
-    //lấy lai form input  và select khi nhấp edit sản phẩm
-    const eles = document.querySelectorAll("#formSP input,#formSP select");
-    console.log("eles: ", eles);
-    //
-    eles.forEach((ele) => {
-      const { id } = ele;
-      ele.value = result.data[id];
+    const elements = document.querySelectorAll("#formSP input, #formSP select");
+
+    elements.forEach((ele) => {
+      ele.value = result.data[ele.id] || ""; // Đảm bảo có giá trị mặc định
     });
 
-    // hiển modal ở khi mở form edit
-    const modal = document.getElementById("exampleModal");
-    modal.classList.remove("hidden");
+    //const sp = layThongTinSanPham();
+    //let isValid = true;
+    //kiểm tra có nhập không
+    //value và errorID bên valid và div  trong html
+    // tài khoản phải nhập trên < 8 và > 20 kí tự , có thể bao gồm số
+    // isValid &= validation.checkTenSP(sp.tenSP, "invalidtenSP");
+    // isValid &= validation.checkGia(sp.giaSP, "invalidgiaSP");
+    // isValid &= validation.checkScreen(sp.screenSP, "invalidscreenSP");
+    // isValid &= validation.checkBackCamera(sp.backcameraSP, "invalidbackcameraSP");
+    // isValid &= validation.checkFrontCamera(
+    //   sp.frontcameraSP,
+    //   "invalidfrontcameraSP"
+    // );
+    // isValid &= validation.checkImage(sp.imgSP, "invalidimgSP");
+    // isValid &= validation.checkDesc(sp.descSP, "invaliddescSP");
+    // isValid &= validation.checkType(sp.typeSP, "invalidtypeSP");
+    // if (!isValid) return;
+
+    isEditMode = true;
+    editingProductId = productId;
+    document.getElementById("btnCapNhatSP").style.display = "inline-block";
+    document.getElementById("btnthemSP").style.display = "none";
+    document.getElementById("exampleModal").classList.remove("hidden");
   } catch (error) {
-    console.log("error: ", error);
+    alert("Không thể lấy thông tin sản phẩm. Vui lòng thử lại.");
+    console.error("Error fetching product for edit: ", error);
   }
 };
 
-window.deleteProduct = async (productId) => {
-  //xóa sản phần
-  //console.log("deleteProduct: ", deleteProduct);
+// Gán sự kiện cho nút cập nhật
+document.getElementById("btnCapNhatSP").onclick = async () => {
+  const sp = layThongTinSanPham();
   try {
-    await api.deleteProduct(productId);
+    await api.editProduct(editingProductId, sp);
     getProducts();
+    document.getElementById("exampleModal").classList.add("hidden");
   } catch (error) {
-    console.log("error: ", error);
+    alert("Có lỗi xảy ra. Vui lòng thử lại.");
+    console.error("Error updating product: ", error);
   }
 };
+
+// Hàm xóa sản phẩm
+window.deleteProduct = async (productId) => {
+  if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
+    try {
+      await api.deleteProduct(productId);
+      getProducts();
+    } catch (error) {
+      alert("Có lỗi xảy ra khi xóa sản phẩm. Vui lòng thử lại.");
+      console.error("Error deleting product: ", error);
+    }
+  }
+};
+
+// Hàm lọc sản phẩm theo giá
+window.locGiaSP = async () => {
+  const sort = document.getElementById("locGiaSP").value;
+
+  const sapXepSanPham = (data, tangDan = true) => {
+    return data.sort((a, b) => {
+      return tangDan
+        ? parseFloat(a.giaSP) - parseFloat(b.giaSP)
+        : parseFloat(b.giaSP) - parseFloat(a.giaSP);
+    });
+  };
+
+  try {
+    const result = await api.getProductList();
+    const danhSachSapXep = sapXepSanPham(result.data, sort === "nhoDenLon");
+    renderTable(danhSachSapXep);
+  } catch (error) {
+    console.error("Error sorting products: ", error);
+  }
+};
+
+// Hàm tìm kiếm sản phẩm
+const searchSP = async () => {
+  const valueSearchInput = document.getElementById("timKiemSP").value;
+
+  try {
+    const response = await api.getProductList();
+    const productList = response.data;
+
+    const nameSearch = productList.filter((sanpham) =>
+      sanpham.tenSP.toUpperCase().includes(valueSearchInput.toUpperCase())
+    );
+
+    renderTable(nameSearch);
+  } catch (error) {
+    alert("Có lỗi xảy ra trong quá trình tìm kiếm.");
+    console.error("Error searching products: ", error);
+  }
+};
+document.getElementById("timKiemSP").oninput = searchSP;
+// Khởi chạy hàm lấy danh sách sản phẩm khi tải trang
+getProducts();
