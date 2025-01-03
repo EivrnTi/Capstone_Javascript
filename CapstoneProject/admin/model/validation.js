@@ -7,7 +7,7 @@ export class Validation {
       element.style.display = "block";
       return false;
     }
-    if (value.length < 4 || value.length > 20) {
+    if (value.length < 4 || value.length > 30) {
       element.innerHTML = "Độ dài phải từ 4 đến 20 ký tự.";
       element.style.display = "block";
       return false;
@@ -42,8 +42,8 @@ export class Validation {
       element.style.display = "block";
       return false;
     }
-    if (value.length < 5 || value.length > 40) {
-      element.innerHTML = "Độ dài phải từ 5 đến 40 ký tự.";
+    if (value.length < 5 || value.length > 50) {
+      element.innerHTML = "Độ dài phải từ 5 đến 50 ký tự.";
       element.style.display = "block";
       return false;
     }
