@@ -1,4 +1,4 @@
-const baseUrl = "https://67642eb452b2a7619f5bbc32.mockapi.io/";
+const baseUrl = "https://672cb9ed1600dda5a9f9a708.mockapi.io/";
 
 export const api = {
   //phương thức lấy tất cả dữ liệu về
