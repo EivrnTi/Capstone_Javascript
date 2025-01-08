@@ -115,7 +115,7 @@ document.getElementById("formSP").onsubmit = async (ev) => {
     } else {
       await api.addProduct(sp);
     }
-    getProducts();
+    await getProducts();
     document.getElementById("exampleModal").classList.add("hidden");
   } catch (error) {
     alert("Có lỗi xảy ra. Vui lòng thử lại.");
@@ -132,24 +132,6 @@ window.editProduct = async (productId) => {
     elements.forEach((ele) => {
       ele.value = result.data[ele.id] || ""; // Đảm bảo có giá trị mặc định
     });
-
-    //const sp = layThongTinSanPham();
-    //let isValid = true;
-    //kiểm tra có nhập không
-    //value và errorID bên valid và div  trong html
-    // tài khoản phải nhập trên < 8 và > 20 kí tự , có thể bao gồm số
-    // isValid &= validation.checkTenSP(sp.tenSP, "invalidtenSP");
-    // isValid &= validation.checkGia(sp.giaSP, "invalidgiaSP");
-    // isValid &= validation.checkScreen(sp.screenSP, "invalidscreenSP");
-    // isValid &= validation.checkBackCamera(sp.backcameraSP, "invalidbackcameraSP");
-    // isValid &= validation.checkFrontCamera(
-    //   sp.frontcameraSP,
-    //   "invalidfrontcameraSP"
-    // );
-    // isValid &= validation.checkImage(sp.imgSP, "invalidimgSP");
-    // isValid &= validation.checkDesc(sp.descSP, "invaliddescSP");
-    // isValid &= validation.checkType(sp.typeSP, "invalidtypeSP");
-    // if (!isValid) return;
 
     isEditMode = true;
     editingProductId = productId;
