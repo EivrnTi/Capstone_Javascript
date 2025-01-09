@@ -20,7 +20,7 @@ document.onkeydown = function (event) {
 const getEle = (id) => document.getElementById(id);
 
 import { Service } from "../services/phoneService.js";
-import { CartItem } from "../model/cartItem.js";
+import { CartItem } from "../model/cartitem.js";
 import { Product } from "../model/product.js";
 
 const service = new Service();
